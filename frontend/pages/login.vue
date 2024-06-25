@@ -1,5 +1,14 @@
 <template>
-  <div class="flex bg-slate-500">
-    login
-  </div>
+    <div>
+        <NuxtLayout name="auth">
+           <div class="">
+           login
+           </div>
+        </NuxtLayout>
+    </div>
 </template>
+<script setup lang="ts">
+definePageMeta({
+  layout: false,
+})
+</script>
