@@ -18,7 +18,7 @@ module.exports = {
     'no-trailing-spaces': ['warn'],
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'vue/multi-word-component-names': [
-      'error',
+      'warn',
       {
         ignores: ['error', 'Error'],
       },
