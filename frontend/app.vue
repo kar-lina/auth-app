@@ -1,12 +1,14 @@
 <template>
   <div>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+    <NuxtPage />
   </div>
 </template>
 <script lang="ts">
 let con = ''
-
-
 </script>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Exo:400,700');
+body {
+  font-family: 'Exo', sans-serif;
+}
+</style>
