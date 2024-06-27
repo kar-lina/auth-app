@@ -32,4 +32,4 @@ User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);
 exports.default = User;
-//# sourceMappingURL=users.entity.js.map
+//# sourceMappingURL=user.entity.js.map

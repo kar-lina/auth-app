@@ -12,53 +12,38 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsersService = void 0;
-const typeorm_1 = require("@nestjs/typeorm");
-const user_entity_1 = require("./user.entity");
-const typeorm_2 = require("typeorm");
+exports.JwtStrategy = void 0;
 const common_1 = require("@nestjs/common");
-let UsersService = class UsersService {
+const passport_1 = require("@nestjs/passport");
+const passport_jwt_1 = require("passport-jwt");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
+const user_entity_1 = require("../users/user.entity");
+let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor(usersRepository) {
+        super({
+            jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: process.env.JWT_SECRET,
+        });
         this.usersRepository = usersRepository;
     }
-    async getAllUsers() {
-        const users = await this.usersRepository.find();
-        return users;
-    }
-    async getUserById(id) {
+    async validate(payload) {
+        const { id } = payload;
         const user = await this.usersRepository.findOne({
             where: {
                 id: id,
             },
         });
-        if (user)
-            return user;
-        throw new common_1.NotFoundException('Could not find the user');
-    }
-    async createUser(newUser) {
-        const user = await this.usersRepository.create(newUser);
-        await this.usersRepository.save({
-            name: newUser.name,
-            email: newUser.email,
-            password: newUser.password,
-        });
-        return user;
-    }
-    async deleteUserById(id) {
-        const user = await this.usersRepository.findOne({
-            where: {
-                id: id,
-            },
-        });
-        if (!user)
-            return null;
-        await this.usersRepository.remove(user);
+        if (!user) {
+            throw new common_1.UnauthorizedException('Login first to access this endpoint.');
+        }
         return user;
     }
 };
-exports.UsersService = UsersService;
-exports.UsersService = UsersService = __decorate([
+exports.JwtStrategy = JwtStrategy;
+exports.JwtStrategy = JwtStrategy = __decorate([
+    (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.default)),
     __metadata("design:paramtypes", [typeorm_2.Repository])
-], UsersService);
-//# sourceMappingURL=users.service.js.map
+], JwtStrategy);
+//# sourceMappingURL=jwt.strategy.js.map
