@@ -2,8 +2,20 @@
   <div>
     <NuxtLayout name="auth">
       <div class="p-10 text-center rounded-xl bg-white">
-        <h1 class="text-2xl mb-10">Добро пожаловать в AuthApp!</h1>
+        <h1 class="text-2xl mb-5">Добро пожаловать в AuthApp!</h1>
+        <h2 class="text-lg mb-10">Для регистрации заполните форму ниже.</h2>
+
         <form @submit="onSubmit" class="flex flex-col gap-8">
+          <label class="input input-bordered flex items-center gap-2">
+            <IconsUser />
+            <input
+              v-model="name"
+              v-bund="nameAttrs"
+              type="text"
+              class="grow"
+              placeholder="Name"
+            />
+          </label>
           <label class="input input-bordered flex items-center gap-2">
             <IconsEmail />
             <input
@@ -28,45 +40,48 @@
               {{ errors.password }}
             </div>
           </label>
-          <input type="submit" value="Войти" class="btn" />
+          <input type="submit" value="Зарегистрироваться" class="btn" />
         </form>
         <p class="mt-5">
-          Нет аккаунта?
-          <NuxtLink to="/sign-up" class="link link-primary">
-            Зарегистрироваться
-          </NuxtLink>
+          Есть аккаунт?
+          <NuxtLink to="/login" class="link link-primary">Войти</NuxtLink>
         </p>
       </div>
     </NuxtLayout>
   </div>
-  ∏
 </template>
 <script setup>
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
+import { useAuthStore } from '~/stores/auth'
+const store = useAuthStore()
 
-// Creates a typed schema for vee-validate
+const router = useRouter()
+
 const schema = toTypedSchema(
   z.object({
     email: z.string().nonempty().email(),
     password: z.string().nonempty(),
+    name: z.string().nonempty(),
   })
 )
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: schema,
 })
-// Creates a submission handler
-// It validate all fields and doesn't call your function unless all fields are valid
+
 const onSubmit = handleSubmit(async (values) => {
   console.log('values', values)
-  await useBaseFetch('/auth/login', {
-        method: 'POST',
-        body: {...values}
-    })
+  try {
+    await store.signUpUser(values)
+    router.push('/profile')
+  } catch (error) {
+    console.log('error', error)
+  }
 })
 
 const [email, emailAttrs] = defineField('email')
 const [password, passwordAttrs] = defineField('password')
+const [name, nameAttrs] = defineField('name')
 </script>

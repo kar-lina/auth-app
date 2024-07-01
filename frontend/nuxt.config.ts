@@ -4,7 +4,10 @@ export default defineNuxtConfig({
   devServer: {
     port: 8000,
   },
-  modules: ['@nuxtjs/eslint-module'],
+  runtimeConfig: {
+    public: { apiBase: process.env.NUXT_PUBLIC_API_BASE ?? '/' },
+  },
+  modules: ['@nuxtjs/eslint-module', '@pinia/nuxt'],
   css: ['~/assets/css/main.css'],
   postcss: {
     plugins: {

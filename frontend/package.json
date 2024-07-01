@@ -10,8 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
     "@vee-validate/zod": "^4.13.1",
     "nuxt": "^3.12.2",
+    "pinia": "^2.1.7",
     "vee-validate": "^4.13.1",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
@@ -28,5 +30,8 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.5.2"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }
