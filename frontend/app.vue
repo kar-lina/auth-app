@@ -1,11 +1,6 @@
 <template>
   <div>
+    <Toast />
     <NuxtPage />
   </div>
 </template>
-<style>
-@import url('https://fonts.googleapis.com/css?family=Exo:400,700');
-body {
-  font-family: 'Exo', sans-serif;
-}
-</style>

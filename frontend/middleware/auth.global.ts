@@ -1,7 +1,9 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  console.log('From auth middleware')
   const { authenticated } = storeToRefs(useAuthStore()) // make authenticated state reactive
   const token = useCookie('token') // get token from cookies
+  if (to?.name === 'index'|| to?.name === 'sign-up') {
+    return
+  }
 
   if (token.value) {
     // check if value exists
@@ -10,6 +12,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   // if token exists and url is /login redirect to homepage
   if (token.value && to?.name === 'login') {
+    // console.log('here', token.value, to?.name)
     return navigateTo('/profile')
   }
 
@@ -18,4 +21,5 @@ export default defineNuxtRouteMiddleware((to, from) => {
     abortNavigation()
     return navigateTo('/login')
   }
+
 })

@@ -1,67 +1,67 @@
 <template>
   <div class="flex flex-col justify-between h-[100vh] w-full">
-    <div class="xl:container xl:mx-auto p-4 h-full flex-1">
-      <header class="navbar bg-base-100">
-        <div class="navbar-start">
-          <div class="dropdown">
-            <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </div>
-            <ul
-              tabindex="0"
-              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+    <header class="navbar bg-base-100 w-full">
+      <div class="navbar-start">
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <li><NuxtLink to="/">About App</NuxtLink></li>
-              <li><a>Item 3</a></li>
-              <li v-if="!authenticated" class="loginBtn" style="float: right">
-                <nuxt-link to="/login">Login</nuxt-link>
-              </li>
-            </ul>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
           </div>
-          <NuxtLink to="/" class="btn btn-ghost text-xl">AuthApp</NuxtLink>
-        </div>
-        <div class="navbar-center hidden lg:flex">
-          <ul class="menu menu-horizontal px-1">
+          <ul
+            tabindex="0"
+            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+          >
             <li><NuxtLink to="/">About App</NuxtLink></li>
-            <li><a>Item 3</a></li>
-            <li v-if="!authenticated" class="loginBtn" style="float: right">
+            <li v-if="!authenticated">
               <nuxt-link to="/login">Login</nuxt-link>
+            </li>
+            <li v-else>
+              <button @click="logUserOut">Logout</button>
             </li>
           </ul>
         </div>
-        <div class="navbar-end">
-          <IconsLogo />
+        <NuxtLink to="/" class="btn btn-ghost text-xl">AuthApp</NuxtLink>
+      </div>
+      <div class="navbar-center hidden lg:flex">
+        <ul class="menu menu-horizontal px-1">
+          <li><NuxtLink to="/">About App</NuxtLink></li>
+          <li v-if="!authenticated">
+            <nuxt-link to="/login">Login</nuxt-link>
+          </li>
+          <li v-else>
+            <button @click="logUserOut">Logout</button>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar-end">
+        <div v-if="authenticated" class="avatar">
+          <nuxt-link to="/profile" class="w-10 overflow-hidden rounded-full">
+            <img
+              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+            />
+          </nuxt-link>
         </div>
-      </header>
+        <IconsLogo v-else />
+      </div>
+    </header>
+    <div class="xl:container xl:mx-auto p-4 h-full flex-1">
       <slot />
     </div>
     <Footer />
   </div>
 </template>
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia' 
-import { useAuthStore } from '~/stores/auth'
-
-const router = useRouter()
-
-const { logUserOut } = useAuthStore() // use authenticateUser action from  auth store
-const { authenticated } = storeToRefs(useAuthStore()) // make authenticated state reactive with storeToRefs
-
-const logout = () => {
-  logUserOut()
-  router.push('/login')
-}
+const { logUserOut, authenticated } = useAuth()
 </script>

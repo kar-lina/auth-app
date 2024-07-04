@@ -45,6 +45,8 @@
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
+const router = useRouter()
+const { authenticateUser } = useAuth()
 
 // Creates a typed schema for vee-validate
 const schema = toTypedSchema(
@@ -60,11 +62,12 @@ const { errors, handleSubmit, defineField } = useForm({
 // Creates a submission handler
 // It validate all fields and doesn't call your function unless all fields are valid
 const onSubmit = handleSubmit(async (values) => {
-  console.log('values', values)
-  await useBaseFetch('/auth/login', {
-        method: 'POST',
-        body: {...values}
-    })
+  try {
+    await authenticateUser(values)
+    router.push('/profile')
+  } catch (error) {
+    console.log('error', error)
+  }
 })
 
 const [email, emailAttrs] = defineField('email')

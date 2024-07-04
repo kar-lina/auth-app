@@ -6,7 +6,7 @@
           class="mt-40 mx-auto p-10 rounded-2xl flex flex-col items-center gap-10 justify-center text-center max-w-[600px] backdrop-blur-sm bg-white/30 "
         >
           <h1 class="title text-4xl font-bold leading-10" >Добро пожаловать в AuthApp</h1>
-          <div class="description text-2xl">
+          <div class="description text-xl">
             Fullstack приложение с авторизацией c использованием Nest.js +
             Postgres, Vue.js + Nuxt.js.
           </div>

@@ -13,10 +13,14 @@ export function useBaseFetch<T>(
   options: UseFetchOptions<T> = {}
 ) {
   const config = useRuntimeConfig()
+  const accessToken = useCookie('token')
 
   return useFetch(url, {
     baseURL: config.public.apiBase as string,
     ...options,
-    $fetch: useNuxtApp().$customFetch,
+    headers: accessToken.value
+      ? { Authorization: `Bearer ${accessToken.value}` }
+      : {}
+    // $fetch: useNuxtApp().$customFetch,
   })
 }
