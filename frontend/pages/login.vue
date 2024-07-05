@@ -5,7 +5,7 @@
         <h1 class="text-2xl mb-10">Добро пожаловать в AuthApp!</h1>
         <form @submit="onSubmit" class="flex flex-col gap-8">
           <label class="input input-bordered flex items-center gap-2">
-            <IconsEmail />
+            <IconsEmail class="h-4 w-4" />
             <input
               v-model="email"
               v-bind="emailAttrs"

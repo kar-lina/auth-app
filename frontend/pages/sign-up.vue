@@ -18,7 +18,7 @@
             <div class="w-[20%]  text-xs text-error text-left">{{ errors.name }}</div>
           </label>
           <label class="input input-bordered flex items-center gap-2">
-            <IconsEmail />
+            <IconsEmail class="h-4 w-4" />
             <input
               v-model="email"
               v-bind="emailAttrs"

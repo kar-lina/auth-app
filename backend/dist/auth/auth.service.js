@@ -52,7 +52,7 @@ let AuthService = class AuthService {
         if (!isPasswordMatch)
             throw new common_1.UnauthorizedException('Invalid email or password!');
         const token = this.jwtService.sign({ id: user.id });
-        return { token };
+        return { token, data: user };
     }
 };
 exports.AuthService = AuthService;

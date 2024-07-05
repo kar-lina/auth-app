@@ -1,7 +1,10 @@
+import { useAuthStore } from '~/stores/auth'
+
 export default defineNuxtRouteMiddleware((to, from) => {
   const { authenticated } = storeToRefs(useAuthStore()) // make authenticated state reactive
   const token = useCookie('token') // get token from cookies
-  if (to?.name === 'index'|| to?.name === 'sign-up') {
+
+  if (to?.name === 'index' || to?.name === 'sign-up') {
     return
   }
 
@@ -21,5 +24,4 @@ export default defineNuxtRouteMiddleware((to, from) => {
     abortNavigation()
     return navigateTo('/login')
   }
-
 })

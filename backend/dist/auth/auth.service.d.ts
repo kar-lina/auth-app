@@ -12,5 +12,6 @@ export declare class AuthService {
     }>;
     login(signUpDto: LoginDto): Promise<{
         token: string;
+        data: User;
     }>;
 }
