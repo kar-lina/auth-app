@@ -28,6 +28,18 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], User.prototype, "twoFactorAuthenticationSecret", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], User.prototype, "isTwoFactorAuthenticationEnabled", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: null, nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "twoFactorAuthenticationSecretEnabledAt", void 0);
 User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

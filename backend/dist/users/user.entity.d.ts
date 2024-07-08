@@ -3,5 +3,8 @@ declare class User {
     name: string;
     email: string;
     password: string;
+    twoFactorAuthenticationSecret: string | null;
+    isTwoFactorAuthenticationEnabled: boolean;
+    twoFactorAuthenticationSecretEnabledAt: string | null;
 }
 export default User;

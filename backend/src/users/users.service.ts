@@ -3,7 +3,6 @@ import User from './user.entity';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/users.dto';
-
 export class UsersService {
   constructor(
     @InjectRepository(User)
@@ -45,4 +44,16 @@ export class UsersService {
     await this.usersRepository.remove(user);
     return user;
   }
+
+  // async setTwoFactorAuthenticationSecret(secret: string, userId: number) {
+  //   const user = await this.usersRepository.findOne({
+  //     where: {
+  //       id: userId,
+  //     },
+  //   });
+  //   if (!user) return null;
+  //   user.twoFactorAuthenticationSecret = secret;
+  //   user.twoFactorAuthenticationSecretEnabledAt = Date();
+  //   await this.usersRepository.save(user);
+  // }
 }

@@ -13,6 +13,15 @@ class User {
 
   @Column()
   password: string;
+
+  @Column()
+  twoFactorAuthenticationSecret: string | null;
+
+  @Column({ default: false })
+  isTwoFactorAuthenticationEnabled: boolean;
+
+  @Column({ default: null, nullable: true })
+  twoFactorAuthenticationSecretEnabledAt: string | null;
 }
 
 export default User;

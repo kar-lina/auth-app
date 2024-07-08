@@ -43,9 +43,14 @@
         <li v-if="!authenticated">
           <nuxt-link to="/login"> Login </nuxt-link>
         </li>
-        <li v-else>
-          <button @click="logUserOut">Logout</button>
-        </li>
+        <template v-else>
+          <li>
+            <button @click="logUserOut">Logout</button>
+          </li>
+          <li>
+            <nuxt-link to="/settings"> Settings </nuxt-link>
+          </li>
+        </template>
       </ul>
     </div>
     <div class="navbar-end">
