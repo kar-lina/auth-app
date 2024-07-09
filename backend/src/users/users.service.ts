@@ -23,7 +23,7 @@ export class UsersService {
   }
 
   async createUser(newUser: CreateUserDto) {
-    const user = await this.usersRepository.create(newUser);
+    const user = this.usersRepository.create(newUser);
 
     await this.usersRepository.save({
       name: newUser.name,
@@ -44,16 +44,39 @@ export class UsersService {
     await this.usersRepository.remove(user);
     return user;
   }
+  async findUserById(userId: number) {
+    return await this.usersRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+  }
+  async findUserByEmail(email: string) {
+    return await this.usersRepository.findOne({
+      where: {
+        email: email,
+      },
+    });
+  }
+  async setTwoFactorAuthenticationSecret(secret: string, userId: number) {
+    const user = await this.findUserById(userId);
+    if (!user) return null;
+    user.twoFactorAuthenticationSecret = secret;
+    user.isTwoFactorAuthenticationEnabled = true;
+    user.twoFactorAuthenticationSecretEnabledAt = Date();
+    await this.usersRepository.save(user);
+  }
+  async turnOnTwoFactorAuthentication(userId: number) {
+    const user = await this.findUserById(userId);
+    if (!user) return null;
+    user.isTwoFactorAuthenticationEnabled = true;
+    user.twoFactorAuthenticationSecretEnabledAt = Date();
+  }
 
-  // async setTwoFactorAuthenticationSecret(secret: string, userId: number) {
-  //   const user = await this.usersRepository.findOne({
-  //     where: {
-  //       id: userId,
-  //     },
-  //   });
-  //   if (!user) return null;
-  //   user.twoFactorAuthenticationSecret = secret;
-  //   user.twoFactorAuthenticationSecretEnabledAt = Date();
-  //   await this.usersRepository.save(user);
-  // }
+  async turnOffTwoFactorAuthentication(userId: number) {
+    const user = await this.findUserById(userId);
+    if (!user) return null;
+    user.isTwoFactorAuthenticationEnabled = false;
+    user.twoFactorAuthenticationSecretEnabledAt = null;
+  }
 }

@@ -36,7 +36,7 @@ let UsersService = class UsersService {
         throw new common_1.NotFoundException('Could not find the user');
     }
     async createUser(newUser) {
-        const user = await this.usersRepository.create(newUser);
+        const user = this.usersRepository.create(newUser);
         await this.usersRepository.save({
             name: newUser.name,
             email: newUser.email,
@@ -54,6 +54,43 @@ let UsersService = class UsersService {
             return null;
         await this.usersRepository.remove(user);
         return user;
+    }
+    async findUserById(userId) {
+        return await this.usersRepository.findOne({
+            where: {
+                id: userId,
+            },
+        });
+    }
+    async findUserByEmail(email) {
+        return await this.usersRepository.findOne({
+            where: {
+                email: email,
+            },
+        });
+    }
+    async setTwoFactorAuthenticationSecret(secret, userId) {
+        const user = await this.findUserById(userId);
+        if (!user)
+            return null;
+        user.twoFactorAuthenticationSecret = secret;
+        user.isTwoFactorAuthenticationEnabled = true;
+        user.twoFactorAuthenticationSecretEnabledAt = Date();
+        await this.usersRepository.save(user);
+    }
+    async turnOnTwoFactorAuthentication(userId) {
+        const user = await this.findUserById(userId);
+        if (!user)
+            return null;
+        user.isTwoFactorAuthenticationEnabled = true;
+        user.twoFactorAuthenticationSecretEnabledAt = Date();
+    }
+    async turnOffTwoFactorAuthentication(userId) {
+        const user = await this.findUserById(userId);
+        if (!user)
+            return null;
+        user.isTwoFactorAuthenticationEnabled = false;
+        user.twoFactorAuthenticationSecretEnabledAt = null;
     }
 };
 exports.UsersService = UsersService;

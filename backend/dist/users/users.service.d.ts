@@ -8,4 +8,9 @@ export declare class UsersService {
     getUserById(id: number): Promise<User>;
     createUser(newUser: CreateUserDto): Promise<User>;
     deleteUserById(id: number): Promise<User>;
+    findUserById(userId: number): Promise<User>;
+    findUserByEmail(email: string): Promise<User>;
+    setTwoFactorAuthenticationSecret(secret: string, userId: number): Promise<any>;
+    turnOnTwoFactorAuthentication(userId: number): Promise<any>;
+    turnOffTwoFactorAuthentication(userId: number): Promise<any>;
 }

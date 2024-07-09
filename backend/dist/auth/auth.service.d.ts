@@ -14,8 +14,4 @@ export declare class AuthService {
         token: string;
         data: User;
     }>;
-    generateTwoFactorAuthenticationSecret(user: User): Promise<{
-        secret: string;
-        otpauthUrl: string;
-    }>;
 }
