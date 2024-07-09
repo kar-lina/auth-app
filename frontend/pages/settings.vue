@@ -13,7 +13,7 @@
               <h2 class="card-title">Двухэтапная аутентификация!</h2>
               <p>Для дополнительной защиты аккаунта, включите двухфакторную аутентификацию</p>
               <div class="card-actions justify-end">
-                <button class="btn btn-info">Включить</button>
+                <button @click="enable2fa" class="btn btn-info">Включить</button>
               </div>
             </div>
           </div>
@@ -24,12 +24,11 @@
 </template>
 <script setup lang="ts">
 const { currentUser } = storeToRefs(useAuthStore());
-
-
-
-
-
 // const {data, pending } = useBaseFetch<{user: User}>('/user/settings')
+// const {data, pending } = useBaseFetch('/2fa/turn-on')
+const enable2fa = async () => {
+  await useNuxtApp().$api('/2fa/turn-on')
+}
 </script>
 <style>
 .card {

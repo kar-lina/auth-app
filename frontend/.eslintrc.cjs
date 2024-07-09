@@ -1,7 +1,6 @@
-const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
+// const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
 
 module.exports = {
-  eslintPluginPrettierRecommended,
   root: true,
   parser: 'vue-eslint-parser',
   parserOptions: {
