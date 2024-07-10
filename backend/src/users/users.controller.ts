@@ -24,20 +24,21 @@ export class UsersController {
   }
 
   @Get(':id')
-  async getUserById(@Param('id') id: number): Promise<User> {
+  async getUserById(@Param('id') id: number): Promise<Partial<User>> {
     const user = await this.usersService.getUserById(id);
     return user;
   }
 
   @Post()
-  async createUser(@Body() createUserDto: CreateUserDto) {
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<Partial<User>> {
     const newUser = await this.usersService.createUser(createUserDto);
     return newUser;
   }
 
   @Delete(':id')
-  async deleteUSerById(@Param('id') id: number): Promise<User> {
-    const user = await this.usersService.deleteUserById(id);
-    return user;
+  async deleteUSerById(@Param('id') id: number): Promise<number> {
+    return await this.usersService.deleteUserById(id);
   }
 }

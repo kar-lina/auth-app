@@ -34,8 +34,7 @@ let UsersController = class UsersController {
         return newUser;
     }
     async deleteUSerById(id) {
-        const user = await this.usersService.deleteUserById(id);
-        return user;
+        return await this.usersService.deleteUserById(id);
     }
 };
 exports.UsersController = UsersController;

@@ -12,10 +12,6 @@ export declare class AuthService {
     }>;
     login(signUpDto: LoginDto): Promise<{
         token: string;
-        data: User;
-    }>;
-    generateTwoFactorAuthenticationSecret(user: User): Promise<{
-        secret: string;
-        otpauthUrl: string;
+        data: Partial<User>;
     }>;
 }

@@ -19,7 +19,6 @@ const typeorm_1 = require("@nestjs/typeorm");
 const user_entity_1 = require("../users/user.entity");
 const typeorm_2 = require("typeorm");
 const bcrypt = require("bcryptjs");
-const otplib_1 = require("otplib");
 let AuthService = class AuthService {
     constructor(usersRepository, jwtService) {
         this.usersRepository = usersRepository;
@@ -33,7 +32,7 @@ let AuthService = class AuthService {
         });
         if (user)
             throw new common_1.ConflictException('User with this email alredy exists');
-        const newUser = await this.usersRepository.create({
+        const newUser = this.usersRepository.create({
             name,
             email,
             password: hashedPassword,
@@ -52,25 +51,16 @@ let AuthService = class AuthService {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch)
             throw new common_1.UnauthorizedException('Invalid email or password!');
+        const { name, twoFactorAuthenticationSecretEnabledAt, isTwoFactorAuthenticationEnabled, } = user;
         const token = this.jwtService.sign({ id: user.id });
-        return { token, data: user };
-    }
-    async generateTwoFactorAuthenticationSecret(user) {
-        const secret = otplib_1.authenticator.generateSecret();
-        const otpauthUrl = otplib_1.authenticator.keyuri(user.email, 'AUTH_APP_NAME', secret);
-        const userUpd = await this.usersRepository.findOne({
-            where: {
-                id: user.id,
-            },
-        });
-        if (!userUpd)
-            return null;
-        userUpd.twoFactorAuthenticationSecret = secret;
-        userUpd.twoFactorAuthenticationSecretEnabledAt = Date();
-        await this.usersRepository.save(userUpd);
         return {
-            secret,
-            otpauthUrl,
+            token,
+            data: {
+                email,
+                name,
+                twoFactorAuthenticationSecretEnabledAt,
+                isTwoFactorAuthenticationEnabled,
+            },
         };
     }
 };

@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { SignUpDto } from './dto/signup.dto';
 import * as bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/login.dto';
-import { authenticator } from 'otplib';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -30,7 +30,7 @@ export class AuthService {
 
     if (user) throw new ConflictException('User with this email alredy exists');
 
-    const newUser = await this.usersRepository.create({
+    const newUser = this.usersRepository.create({
       name,
       email,
       password: hashedPassword,
@@ -43,7 +43,9 @@ export class AuthService {
     return { token };
   }
 
-  async login(signUpDto: LoginDto): Promise<{ token: string; data: User }> {
+  async login(
+    signUpDto: LoginDto,
+  ): Promise<{ token: string; data: Partial<User> }> {
     const { email, password } = signUpDto;
 
     const user = await this.usersRepository.findOne({
@@ -56,37 +58,21 @@ export class AuthService {
     if (!isPasswordMatch)
       throw new UnauthorizedException('Invalid email or password!');
 
+    const {
+      name,
+      twoFactorAuthenticationSecretEnabledAt,
+      isTwoFactorAuthenticationEnabled,
+    } = user;
+
     const token = this.jwtService.sign({ id: user.id });
-    return { token, data: user };
-  }
-
-  async generateTwoFactorAuthenticationSecret(user: User) {
-    const secret = authenticator.generateSecret();
-
-    const otpauthUrl = authenticator.keyuri(
-      user.email,
-      'AUTH_APP_NAME',
-      secret,
-    );
-
-    const userUpd = await this.usersRepository.findOne({
-      where: {
-        id: user.id,
-      },
-    });
-    if (!userUpd) return null;
-    userUpd.twoFactorAuthenticationSecret = secret;
-    userUpd.twoFactorAuthenticationSecretEnabledAt = Date();
-    await this.usersRepository.save(userUpd);
-
-    // await this.usersService.setTwoFactorAuthenticationSecret(
-    //   secret,
-    //   user.userId,
-    // );
-
     return {
-      secret,
-      otpauthUrl,
+      token,
+      data: {
+        email,
+        name,
+        twoFactorAuthenticationSecretEnabledAt,
+        isTwoFactorAuthenticationEnabled,
+      },
     };
   }
 }

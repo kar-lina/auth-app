@@ -15,7 +15,9 @@
               class="grow"
               placeholder="Name"
             />
-            <div class="w-[20%]  text-xs text-error text-left">{{ errors.name }}</div>
+            <div class="w-[20%] text-xs text-error text-left">
+              {{ errors.name }}
+            </div>
           </label>
           <label class="input input-bordered flex items-center gap-2">
             <IconsEmail class="h-4 w-4" />
@@ -26,7 +28,9 @@
               class="grow"
               placeholder="Email"
             />
-            <div class="w-[20%]  text-xs text-error text-left">{{ errors.email }}</div>
+            <div class="w-[20%] text-xs text-error text-left">
+              {{ errors.email }}
+            </div>
           </label>
           <label class="input input-bordered flex items-center gap-2">
             <IconsPassword />
@@ -37,7 +41,7 @@
               class="grow"
               placeholder="Password"
             />
-            <div class="w-[20%]  text-xs text-error text-left">
+            <div class="w-[20%] text-xs text-error text-left">
               {{ errors.password }}
             </div>
           </label>
@@ -50,7 +54,7 @@
               class="grow"
               placeholder="Confirm Password"
             />
-            <div class="w-[20%]  text-xs text-error text-left">
+            <div class="w-[20%] text-xs text-error text-left">
               {{ errors.confirmPassword }}
             </div>
           </label>
@@ -65,13 +69,12 @@
   </div>
 </template>
 <script setup>
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import { z } from 'zod'
-const { signUpUser } = useAuth()
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import { z } from 'zod';
+const { signUpUser } = useAuth();
 
-
-const router = useRouter()
+const router = useRouter();
 
 const schema = toTypedSchema(
   z
@@ -84,23 +87,24 @@ const schema = toTypedSchema(
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords don't match",
       path: ['confirmPassword'], // path of error
-    })
-)
+    }),
+);
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: schema,
-})
+});
 
 const onSubmit = handleSubmit(async (values) => {
   try {
-    signUpUser(values)
+    signUpUser(values);
+    router.push('/login');
   } catch (error) {
-    console.log('error', error)
+    console.log('error', error);
   }
-})
+});
 
-const [email, emailAttrs] = defineField('email')
-const [password, passwordAttrs] = defineField('password')
-const [confirmPassword, confirmPasswordAttrs] = defineField('confirmPassword')
-const [name, nameAttrs] = defineField('name')
+const [email, emailAttrs] = defineField('email');
+const [password, passwordAttrs] = defineField('password');
+const [confirmPassword, confirmPasswordAttrs] = defineField('confirmPassword');
+const [name, nameAttrs] = defineField('name');
 </script>
