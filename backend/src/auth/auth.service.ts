@@ -62,12 +62,14 @@ export class AuthService {
       name,
       twoFactorAuthenticationSecretEnabledAt,
       isTwoFactorAuthenticationEnabled,
+      id,
     } = user;
 
     const token = this.jwtService.sign({ id: user.id });
     return {
       token,
       data: {
+        id,
         email,
         name,
         twoFactorAuthenticationSecretEnabledAt,

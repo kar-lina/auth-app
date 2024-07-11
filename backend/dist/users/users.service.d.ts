@@ -6,6 +6,7 @@ export declare class UsersService {
     constructor(usersRepository: Repository<User>);
     getAllUsers(): Promise<User[]>;
     getUserById(id: number): Promise<{
+        id: number;
         name: string;
         twoFactorAuthenticationSecretEnabledAt: string;
         isTwoFactorAuthenticationEnabled: boolean;

@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async getAuth() {
       const userId = useCookie('userId');
-      if (!userId) {
+      if (!userId?.value) {
         this.logUserOut();
         return;
       }
@@ -25,6 +25,7 @@ export const useAuthStore = defineStore('auth', {
         `/users/${userId.value}`,
       );
       this.currentUser = data.value;
+      userId.value = data.value.id
     },
     async authenticateUser({ email, password }: LoginUserPayloadInterface) {
       const { alert } = useToastStore();

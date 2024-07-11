@@ -10,7 +10,7 @@ export const useAuth = () => {
     if(!authenticated.value) router.push('/login')
   })
 
-  if (!currentUser.value) getAuth() 
+  if (!currentUser.value) getAuth()
   return {
     logUserOut,
     authenticateUser,
@@ -18,5 +18,6 @@ export const useAuth = () => {
     authenticated,
     token,
     currentUser,
+    getAuth,
   }
 }

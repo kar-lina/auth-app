@@ -5,5 +5,9 @@ export declare class TwofaController {
     turnOnTwoFactorAuthentication(request: any): Promise<{
         otpauthUrl: string;
     }>;
+    getQRCode(request: any): Promise<{
+        otpauthUrl: string;
+        secret: string;
+    }>;
     turnOffTwoFactorAuthentication(request: any, body: any): Promise<void>;
 }

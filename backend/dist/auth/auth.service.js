@@ -51,11 +51,12 @@ let AuthService = class AuthService {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch)
             throw new common_1.UnauthorizedException('Invalid email or password!');
-        const { name, twoFactorAuthenticationSecretEnabledAt, isTwoFactorAuthenticationEnabled, } = user;
+        const { name, twoFactorAuthenticationSecretEnabledAt, isTwoFactorAuthenticationEnabled, id, } = user;
         const token = this.jwtService.sign({ id: user.id });
         return {
             token,
             data: {
+                id,
                 email,
                 name,
                 twoFactorAuthenticationSecretEnabledAt,

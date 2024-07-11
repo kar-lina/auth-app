@@ -12,6 +12,7 @@
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
     "@vee-validate/zod": "^4.13.1",
+    "dayjs": "^1.11.11",
     "nuxt": "^3.12.2",
     "pinia": "^2.1.7",
     "vee-validate": "^4.13.1",
@@ -21,15 +22,20 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@eslint/js": "^9.6.0",
+    "@nuxt/types": "^2.18.1",
     "@nuxtjs/eslint-module": "^4.1.0",
     "@tailwindcss/typography": "^0.5.13",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "autoprefixer": "^10.4.19",
     "daisyui": "^4.12.7",
+    "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.26.0",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "vite-plugin-checker": "^0.7.1",
+    "vue-tsc": "^2.0.26"
   }
 }

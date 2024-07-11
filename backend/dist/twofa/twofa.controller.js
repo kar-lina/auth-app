@@ -21,10 +21,16 @@ let TwofaController = class TwofaController {
         this.twofaService = twofaService;
     }
     async turnOnTwoFactorAuthentication(request) {
+        console.log('request.user', request.user);
         return await this.twofaService.enableTwoFactorAuthenticationSecret(request.user);
+    }
+    async getQRCode(request) {
+        console.log('request.user', request.user);
+        return this.twofaService.generateQrCodeDataURL(request.user.email, request.user.twoFactorAuthenticationSecret);
     }
     async turnOffTwoFactorAuthentication(request, body) {
         const isCodeValid = this.twofaService.isTwoFactorAuthenticationCodeValid(body.twoFactorAuthenticationCode, request.user);
+        console.log(body.twoFactorAuthenticationCode, isCodeValid);
         if (!isCodeValid) {
             throw new common_1.UnauthorizedException('Wrong authentication code');
         }
@@ -39,6 +45,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], TwofaController.prototype, "turnOnTwoFactorAuthentication", null);
+__decorate([
+    (0, common_1.Get)('/qr-code'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], TwofaController.prototype, "getQRCode", null);
 __decorate([
     (0, common_1.Post)('/turn-off'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),

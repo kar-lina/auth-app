@@ -25,9 +25,10 @@ export class UsersService {
         name,
         twoFactorAuthenticationSecretEnabledAt,
         isTwoFactorAuthenticationEnabled,
+        id,
       } = user;
-
       return {
+        id,
         name,
         twoFactorAuthenticationSecretEnabledAt,
         isTwoFactorAuthenticationEnabled,

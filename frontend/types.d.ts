@@ -10,5 +10,5 @@ export interface User {
   name: string;
   email: string;
   isTwoFactorAuthenticationEnabled: boolean;
-  twoFactorAuthenticationSecretEnabledAt: string | null;
+  twoFactorAuthenticationSecretEnabledAt: Date | null;
 }

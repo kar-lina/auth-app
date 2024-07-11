@@ -32,8 +32,9 @@ let UsersService = class UsersService {
             },
         });
         if (user) {
-            const { name, twoFactorAuthenticationSecretEnabledAt, isTwoFactorAuthenticationEnabled, } = user;
+            const { name, twoFactorAuthenticationSecretEnabledAt, isTwoFactorAuthenticationEnabled, id, } = user;
             return {
+                id,
                 name,
                 twoFactorAuthenticationSecretEnabledAt,
                 isTwoFactorAuthenticationEnabled,
