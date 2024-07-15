@@ -21,7 +21,6 @@ let TwofaController = class TwofaController {
         this.twofaService = twofaService;
     }
     async turnOnTwoFactorAuthentication(request) {
-        console.log('request.user', request.user);
         return await this.twofaService.enableTwoFactorAuthenticationSecret(request.user);
     }
     async getQRCode(request) {
@@ -32,8 +31,9 @@ let TwofaController = class TwofaController {
         const isCodeValid = this.twofaService.isTwoFactorAuthenticationCodeValid(body.twoFactorAuthenticationCode, request.user);
         console.log(body.twoFactorAuthenticationCode, isCodeValid);
         if (!isCodeValid) {
-            throw new common_1.UnauthorizedException('Wrong authentication code');
+            throw new common_1.HttpException('Wrong authentication code', common_1.HttpStatus.FORBIDDEN);
         }
+        return await this.twofaService.disableTwoFactorAuthenticationSecret(request.user);
     }
 };
 exports.TwofaController = TwofaController;

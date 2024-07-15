@@ -20,12 +20,14 @@
       <template v-else>
         <p>
           Двухфаторная аутентификая включена
-          <tempalte v-if="currentUser.twoFactorAuthenticationSecretEnabledAt">{{
-            useDate(currentUser.twoFactorAuthenticationSecretEnabledAt)
-          }}</tempalte>
+          <tempalte v-if="currentUser.twoFactorAuthenticationSecretEnabledAt">
+            {{ useDate(currentUser.twoFactorAuthenticationSecretEnabledAt) }}
+          </tempalte>
         </p>
         <div class="card-actions justify-between mt-2">
-          <button class="btn" @click="disble2fa">Выключить</button>
+          <button class="btn" @click="disable2FAModalOpen = true">
+            Выключить
+          </button>
           <button class="btn btn-info" @click="showQR">Показать QR-code</button>
         </div>
       </template>
@@ -33,8 +35,62 @@
     <UiModal id="2fa-modal" :visible="!!qrCodeImg">
       <template #content>
         <div class="flex flex-col items-center gap-4">
-          <h1 class="text-xl">Отсканируйте в приложении QR-code.</h1>
+          <h1 class="text-xl">Настройка приложения аутентификации.</h1>
+          <ul class="list list-disc mb-5">
+            <li>В приложении Google Authenticator нажмите на значок "+".</li>
+            <li>Отсканируйте QR-код</li>
+          </ul>
           <img :src="qrCodeImg" />
+          <div
+            tabindex="0"
+            class="collapse collapse-arrow border-base-300 bg-base-200 border"
+          >
+            <div class="collapse-title text-base">
+              Не получается отсканировать QR-код?
+            </div>
+            <div class="collapse-content text-sm">
+              <ol class="list-decimal flex flex-col gap-2 p-4">
+                <li>
+                  В приложении Google Authenticator нажмите на значок
+                  <strong>+</strong>, а затем выберите
+                  <strong>Ввести ключ настройки</strong>.
+                </li>
+                <li>
+                  Укажите адрес электронной почты и этот ключ (пробелы не
+                  учитываются):
+                  <div>
+                    <strong>{{ twoFASecrete }}</strong>
+                  </div>
+                </li>
+                <li>
+                  Убедитесь, что выбран параметр <strong>По времени</strong>.
+                </li>
+                <li>
+                  Чтобы завершить настройку, нажмите <strong>Добавить</strong>.
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </template>
+    </UiModal>
+    <UiModal id="2fa-enable" :visible="disable2FAModalOpen">
+      <template #content>
+        <div class="flex flex-col gap-6 items-center">
+          <p>
+            Для отключения двухфаторной аутентификации введите код из приложения
+          </p>
+          <UiOTP
+            :digitCount="6"
+            @update:otp="twoFactorAuthenticationCode = $event"
+          />
+          <button
+            :disabled="!twoFactorAuthenticationCode"
+            @click="disble2fa"
+            class="btn btn-info"
+          >
+            Отключить
+          </button>
         </div>
       </template>
     </UiModal>
@@ -42,8 +98,11 @@
 </template>
 <script setup lang="ts">
 const { currentUser, getAuth } = useAuth();
+const { alert } = useToastStore();
+
 const qrCodeImg = ref('');
-console.log('qrCodeImg', qrCodeImg.value);
+const twoFASecrete = ref('');
+const disable2FAModalOpen = ref(false);
 
 const showQR = async () => {
   try {
@@ -52,33 +111,57 @@ const showQR = async () => {
     );
     if (res.otpauthUrl) {
       qrCodeImg.value = res.otpauthUrl;
-      console.log('qrCodeImg', qrCodeImg.value);
-      console.log('secret', res.secret);
+      twoFASecrete.value = res.secret;
     }
     getAuth();
-  } catch (error) {}
+  } catch (error: any) {
+    alert(error, 'error');
+  }
 };
 const enable2fa = async () => {
   try {
-    const res: { otpauthUrl: string } = await useNuxtApp().$api(
+    const res: { otpauthUrl: string; secret: string } = await useNuxtApp().$api(
       '/2fa/turn-on',
-      { method: 'post' },
+      {
+        method: 'post',
+        onResponseError({ request, response, options }) {
+          alert(response._data.message, 'error');
+        },
+      },
     );
     if (res.otpauthUrl) {
       qrCodeImg.value = res.otpauthUrl;
-      console.log('qrCodeImg', qrCodeImg.value);
+      twoFASecrete.value = res.secret;
     }
     getAuth();
-  } catch (error) {}
+  } catch (error: any) {
+    alert(error, 'error');
+  }
 };
+const twoFactorAuthenticationCode = ref('');
 
 const disble2fa = async () => {
+  if (!twoFactorAuthenticationCode) return;
   try {
     const res: { otpauthUrl: string } = await useNuxtApp().$api(
       '/2fa/turn-off',
-      { method: 'post' },
+      {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: {
+          twoFactorAuthenticationCode: twoFactorAuthenticationCode.value,
+        },
+        onResponseError({ request, response, options }) {
+          alert(response._data.message, 'error');
+        },
+      },
     );
-  } catch (error) {}
+    getAuth();
+    alert('Двухфакторная аутентификация отключена', 'info');
+    disable2FAModalOpen.value = false
+  } catch (error: any) {
+    console.log(error);
+  }
 };
 </script>
 

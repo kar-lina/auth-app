@@ -4,7 +4,6 @@ import { authenticator } from 'otplib';
 import User from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { toDataURL } from 'qrcode';
-import { totp } from 'otplib';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -12,8 +11,6 @@ export class TwofaService {
   constructor(
     @Inject(forwardRef(() => UsersService)) private usersService: UsersService,
     private readonly configService: ConfigService,
-
-    // private jwtService: JwtService,
   ) {}
   async generateTwoFactorAuthenticationSecret(user: User) {
     const secret = authenticator.generateSecret();
@@ -21,7 +18,11 @@ export class TwofaService {
     await this.usersService.setTwoFactorAuthenticationSecret(secret, user.id);
     return await this.generateQrCodeDataURL(user.email, secret);
   }
-
+  async disableTwoFactorAuthenticationSecret(user: User) {
+    if (user.twoFactorAuthenticationSecret) {
+      await this.usersService.turnOffTwoFactorAuthentication(user.id);
+    }
+  }
   async enableTwoFactorAuthenticationSecret(user: User) {
     if (user.twoFactorAuthenticationSecret) {
       await this.usersService.turnOnTwoFactorAuthentication(user.id);
@@ -39,7 +40,6 @@ export class TwofaService {
     secret: string,
     serviceName = this.configService.get('TWO_FACTOR_AUTHENTICATION_APP_NAME'),
   ) {
-    // const token = authenticator.generate(secret);
     const url = authenticator.keyuri(userEmail, serviceName, secret);
     return {
       otpauthUrl: await toDataURL(url),

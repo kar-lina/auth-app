@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Post,
   Req,
   UnauthorizedException,
@@ -25,7 +27,7 @@ export class TwofaController {
     @Req() request,
     // @Body() body,
   ): Promise<{ otpauthUrl: string }> {
-    console.log('request.user', request.user);
+    // console.log('request.user', request.user);
     return await this.twofaService.enableTwoFactorAuthenticationSecret(
       request.user,
     );
@@ -50,8 +52,14 @@ export class TwofaController {
     );
     console.log(body.twoFactorAuthenticationCode, isCodeValid);
     if (!isCodeValid) {
-      throw new UnauthorizedException('Wrong authentication code');
+      // throw new UnauthorizedException('Wrong authentication code');
+      throw new HttpException(
+        'Wrong authentication code',
+        HttpStatus.FORBIDDEN,
+      );
     }
-    // await this.usersService.turnOffTwoFactorAuthentication(request.user.id);
+    return await this.twofaService.disableTwoFactorAuthenticationSecret(
+      request.user,
+    );
   }
 }

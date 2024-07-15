@@ -23,12 +23,14 @@ export class UsersController {
     return users;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async getUserById(@Param('id') id: number): Promise<Partial<User>> {
     const user = await this.usersService.getUserById(id);
     return user;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async createUser(
     @Body() createUserDto: CreateUserDto,
@@ -37,6 +39,7 @@ export class UsersController {
     return newUser;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async deleteUSerById(@Param('id') id: number): Promise<number> {
     return await this.usersService.deleteUserById(id);

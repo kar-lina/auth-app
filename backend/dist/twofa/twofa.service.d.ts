@@ -9,6 +9,7 @@ export declare class TwofaService {
         otpauthUrl: string;
         secret: string;
     }>;
+    disableTwoFactorAuthenticationSecret(user: User): Promise<void>;
     enableTwoFactorAuthenticationSecret(user: User): Promise<{
         otpauthUrl: string;
         secret: string;

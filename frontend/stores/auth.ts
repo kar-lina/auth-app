@@ -16,6 +16,8 @@ export const useAuthStore = defineStore('auth', {
   }),
   actions: {
     async getAuth() {
+      const { alert } = useToastStore();
+
       const userId = useCookie('userId');
       if (!userId?.value) {
         this.logUserOut();
@@ -23,9 +25,14 @@ export const useAuthStore = defineStore('auth', {
       }
       const { data, pending }: any = await useBaseFetch(
         `/users/${userId.value}`,
+        {
+          onResponseError({ request, response, options }) {
+            alert(response._data.message, 'error');
+          },
+        },
       );
       this.currentUser = data.value;
-      userId.value = data.value.id
+      userId.value = data.value.id;
     },
     async authenticateUser({ email, password }: LoginUserPayloadInterface) {
       const { alert } = useToastStore();
@@ -41,7 +48,7 @@ export const useAuthStore = defineStore('auth', {
           password,
         },
         onResponseError({ request, response, options }) {
-          alert(response._data.message, 'error');
+          useNuxtApp().$toast.error(response._data.message);
         },
       });
       this.loading = status.value === 'pending';
@@ -84,9 +91,11 @@ export const useAuthStore = defineStore('auth', {
     },
     logUserOut() {
       const { alert } = useToastStore();
-
       console.log('logUserOut');
       const token = useCookie('token'); // useCookie new hook in nuxt 3
+      const userId = useCookie('userId');
+      useClearStore();
+      userId.value = null;
       this.authenticated = false; // set authenticated  state value to false
       token.value = null; // clear the token cookie
       alert('До скорой встречи!', 'info');

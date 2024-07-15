@@ -96,6 +96,7 @@ let UsersService = class UsersService {
             return null;
         user.isTwoFactorAuthenticationEnabled = true;
         user.twoFactorAuthenticationSecretEnabledAt = Date();
+        await this.usersRepository.save(user);
     }
     async turnOffTwoFactorAuthentication(userId) {
         const user = await this.findUserById(userId);
@@ -103,6 +104,7 @@ let UsersService = class UsersService {
             return null;
         user.isTwoFactorAuthenticationEnabled = false;
         user.twoFactorAuthenticationSecretEnabledAt = null;
+        await this.usersRepository.save(user);
     }
 };
 exports.UsersService = UsersService;

@@ -28,6 +28,11 @@ let TwofaService = class TwofaService {
         await this.usersService.setTwoFactorAuthenticationSecret(secret, user.id);
         return await this.generateQrCodeDataURL(user.email, secret);
     }
+    async disableTwoFactorAuthenticationSecret(user) {
+        if (user.twoFactorAuthenticationSecret) {
+            await this.usersService.turnOffTwoFactorAuthentication(user.id);
+        }
+    }
     async enableTwoFactorAuthenticationSecret(user) {
         if (user.twoFactorAuthenticationSecret) {
             await this.usersService.turnOnTwoFactorAuthentication(user.id);
