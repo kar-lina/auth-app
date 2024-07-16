@@ -8,6 +8,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import User from 'src/users/user.entity';
+// import { TwofaService } from 'src/twofa/twofa.service';
+import { TwofaModule } from 'src/twofa/twofa.module';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import User from 'src/users/user.entity';
       },
     }),
     TypeOrmModule.forFeature([User]),
+    TwofaModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

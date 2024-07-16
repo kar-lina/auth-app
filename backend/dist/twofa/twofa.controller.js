@@ -29,7 +29,6 @@ let TwofaController = class TwofaController {
     }
     async turnOffTwoFactorAuthentication(request, body) {
         const isCodeValid = this.twofaService.isTwoFactorAuthenticationCodeValid(body.twoFactorAuthenticationCode, request.user);
-        console.log(body.twoFactorAuthenticationCode, isCodeValid);
         if (!isCodeValid) {
             throw new common_1.HttpException('Wrong authentication code', common_1.HttpStatus.FORBIDDEN);
         }

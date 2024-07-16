@@ -76,7 +76,7 @@
     </UiModal>
     <UiModal id="2fa-enable" :visible="disable2FAModalOpen">
       <template #content>
-        <div class="flex flex-col gap-6 items-center">
+        <div class="flex flex-col gap-6 items-center text-center">
           <p>
             Для отключения двухфаторной аутентификации введите код из приложения
           </p>

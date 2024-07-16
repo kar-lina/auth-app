@@ -1,7 +1,11 @@
 import {
   ConflictException,
+  HttpException,
+  HttpStatus,
+  Inject,
   Injectable,
   UnauthorizedException,
+  forwardRef,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +14,7 @@ import { Repository } from 'typeorm';
 import { SignUpDto } from './dto/signup.dto';
 import * as bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/login.dto';
+import { TwofaService } from 'src/twofa/twofa.service';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +22,7 @@ export class AuthService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private jwtService: JwtService,
+    @Inject(forwardRef(() => TwofaService)) private twofaService: TwofaService,
   ) {}
 
   async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
@@ -43,27 +49,46 @@ export class AuthService {
     return { token };
   }
 
+  async checkPassword(password: string, userPassword: string) {
+    const isPasswordMatch = await bcrypt.compare(password, userPassword);
+    // if (!isPasswordMatch)
+      // throw new UnauthorizedException('Invalid email or password!');
+    return isPasswordMatch;
+  }
+
   async login(
-    signUpDto: LoginDto,
+    loginDto: LoginDto,
   ): Promise<{ token: string; data: Partial<User> }> {
-    const { email, password } = signUpDto;
+    const { email, password, twoFactorAuthenticationCode } = loginDto;
 
     const user = await this.usersRepository.findOne({
       where: { email },
     });
-
     if (!user) throw new UnauthorizedException('Invalid email or password!');
 
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatch)
-      throw new UnauthorizedException('Invalid email or password!');
+    this.checkPassword(password, user.password);
 
-    const {
-      name,
-      twoFactorAuthenticationSecretEnabledAt,
-      isTwoFactorAuthenticationEnabled,
-      id,
-    } = user;
+    const isTwoFactorAuthenticationEnabled =
+      user.isTwoFactorAuthenticationEnabled;
+    const { name, twoFactorAuthenticationSecretEnabledAt, id } = user;
+
+    if (isTwoFactorAuthenticationEnabled) {
+      if (!twoFactorAuthenticationCode) {
+        throw new HttpException(
+          'Enter authentication code',
+          HttpStatus.FORBIDDEN,
+        );
+      } else {
+        const isCodeValid =
+          this.twofaService.isTwoFactorAuthenticationCodeValid(
+            twoFactorAuthenticationCode,
+            user,
+          );
+        if (!isCodeValid) {
+          throw new UnauthorizedException('Wrong authentication code');
+        }
+      }
+    }
 
     const token = this.jwtService.sign({ id: user.id });
     return {

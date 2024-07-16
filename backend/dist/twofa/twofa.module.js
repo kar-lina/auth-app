@@ -10,18 +10,19 @@ exports.TwofaModule = void 0;
 const common_1 = require("@nestjs/common");
 const twofa_service_1 = require("./twofa.service");
 const twofa_controller_1 = require("./twofa.controller");
-const users_service_1 = require("../users/users.service");
 const user_entity_1 = require("../users/user.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const config_1 = require("@nestjs/config");
+const users_module_1 = require("../users/users.module");
 let TwofaModule = class TwofaModule {
 };
 exports.TwofaModule = TwofaModule;
 exports.TwofaModule = TwofaModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.default]), config_1.ConfigModule],
+        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.default]), config_1.ConfigModule, users_module_1.UsersModule],
         controllers: [twofa_controller_1.TwofaController],
-        providers: [twofa_service_1.TwofaService, users_service_1.UsersService],
+        providers: [twofa_service_1.TwofaService],
+        exports: [twofa_service_1.TwofaService],
     })
 ], TwofaModule);
 //# sourceMappingURL=twofa.module.js.map

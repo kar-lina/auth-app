@@ -5,7 +5,7 @@
       :key="el? el + ind : ind"
       v-model="digits[ind]"
       type="text"
-      class="digit-box"
+      :class="['digit-box', small? '_small': '']"
       :autofocus="ind === 0"
       :placeholder="String(ind + 1)"
       maxlength="1"
@@ -18,6 +18,10 @@ const props = defineProps({
   digitCount: {
     type: Number,
     required: true,
+  },
+  small: {
+    type: Boolean,
+    required: false,
   },
 });
 
@@ -87,6 +91,17 @@ const handleKeyDown = function (event: KeyboardEvent, index: number) {
   padding: 10px;
   margin: 5px;
   font-size: 2rem;
+}
+
+.digit-box._small {
+  height: 2rem;
+  width: 2rem;
+  border: 1px solid #eca9cf;
+  display: inline-block;
+  border-radius: 5px;
+  padding: 8px;
+  margin: 2px;
+  font-size: 1rem;
 }
 
 .digit-box:focus {

@@ -16,6 +16,7 @@ const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
 const jwt_strategy_1 = require("./jwt.strategy");
 const user_entity_1 = require("../users/user.entity");
+const twofa_module_1 = require("../twofa/twofa.module");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -36,6 +37,7 @@ exports.AuthModule = AuthModule = __decorate([
                 },
             }),
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.default]),
+            twofa_module_1.TwofaModule,
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],

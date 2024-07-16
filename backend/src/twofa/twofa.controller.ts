@@ -6,20 +6,14 @@ import {
   HttpStatus,
   Post,
   Req,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { TwofaService } from './twofa.service';
 import { AuthGuard } from '@nestjs/passport';
-// import User from 'src/users/user.entity';
-// import { UsersService } from 'src/users/users.service';
 
 @Controller('2fa')
 export class TwofaController {
-  constructor(
-    private readonly twofaService: TwofaService,
-    // private usersService: UsersService,
-  ) {}
+  constructor(private readonly twofaService: TwofaService) {}
 
   @Post('/turn-on')
   @UseGuards(AuthGuard('jwt'))
@@ -50,7 +44,6 @@ export class TwofaController {
       body.twoFactorAuthenticationCode,
       request.user,
     );
-    console.log(body.twoFactorAuthenticationCode, isCodeValid);
     if (!isCodeValid) {
       // throw new UnauthorizedException('Wrong authentication code');
       throw new HttpException(

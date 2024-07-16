@@ -1,6 +1,7 @@
 export interface LoginUserPayloadInterface {
   email: string;
   password: string;
+  twoFactorAuthenticationCode?: string;
 }
 export interface SignUpUserPayloadInterface extends LoginUserPayloadInterface {
   name: string;

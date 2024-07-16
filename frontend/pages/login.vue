@@ -28,7 +28,18 @@
               {{ errors.password }}
             </div>
           </label>
-          <input type="submit" value="Войти" class="btn" />
+          <input
+            :disabled="!twoFactorAuthenticationCode && showOtp"
+            type="submit"
+            value="Войти"
+            class="btn"
+          />
+          <UiOTP
+            v-if="showOtp"
+            :digitCount="6"
+            small
+            @update:otp="twoFactorAuthenticationCode = $event"
+          />
         </form>
         <p class="mt-5">
           Нет аккаунта?
@@ -42,34 +53,37 @@
   ∏
 </template>
 <script setup>
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import { z } from 'zod'
-const router = useRouter()
-const { authenticateUser } = useAuth()
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import { z } from 'zod';
+const router = useRouter();
+const { authenticateUser } = useAuth();
 
+const showOtp = ref(false);
+const twoFactorAuthenticationCode = ref('');
 // Creates a typed schema for vee-validate
 const schema = toTypedSchema(
   z.object({
-    email: z.string().nonempty().email(),
-    password: z.string().nonempty(),
-  })
-)
+    email: z.string().min(1).email(),
+    password: z.string().min(1),
+    // twoFactorAuthenticationCode: z.number(),
+  }),
+);
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: schema,
-})
+});
 // Creates a submission handler
 // It validate all fields and doesn't call your function unless all fields are valid
 const onSubmit = handleSubmit(async (values) => {
   try {
-    await authenticateUser(values)
-    router.push('/profile')
+    showOtp.value = await authenticateUser(showOtp? {...values, twoFactorAuthenticationCode: twoFactorAuthenticationCode.value} : values);
+    router.push('/profile');
   } catch (error) {
-    console.log('error', error)
+    console.log('error', error);
   }
-})
+});
 
-const [email, emailAttrs] = defineField('email')
-const [password, passwordAttrs] = defineField('password')
+const [email, emailAttrs] = defineField('email');
+const [password, passwordAttrs] = defineField('password');
 </script>

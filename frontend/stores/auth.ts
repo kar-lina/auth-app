@@ -34,8 +34,13 @@ export const useAuthStore = defineStore('auth', {
       this.currentUser = data.value;
       userId.value = data.value.id;
     },
-    async authenticateUser({ email, password }: LoginUserPayloadInterface) {
+    async authenticateUser({
+      email,
+      password,
+      twoFactorAuthenticationCode,
+    }: LoginUserPayloadInterface) {
       const { alert } = useToastStore();
+      const showOtp = ref(false)
 
       const { data, status } = await useBaseFetch<{
         token: string;
@@ -43,12 +48,18 @@ export const useAuthStore = defineStore('auth', {
       }>('/auth/login', {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
-        body: {
-          email,
-          password,
-        },
+        body: twoFactorAuthenticationCode
+          ? {
+              email,
+              password,
+              twoFactorAuthenticationCode,
+            }
+          : { email, password },
         onResponseError({ request, response, options }) {
           useNuxtApp().$toast.error(response._data.message);
+          if (response.status === 403) {
+            showOtp.value = true
+          }
         },
       });
       this.loading = status.value === 'pending';
@@ -60,6 +71,7 @@ export const useAuthStore = defineStore('auth', {
         this.authenticated = true; // set authenticated  state value to true
         alert('С возвращением!');
       }
+      return showOtp;
     },
     async signUpUser({ email, password, name }: SignUpUserPayloadInterface) {
       const { alert } = useToastStore();
