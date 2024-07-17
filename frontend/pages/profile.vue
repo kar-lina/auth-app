@@ -7,16 +7,13 @@
         <h1 class="title text-4xl font-bold leading-10">
           Добро пожаловать в AuthApp, {{ currentUser?.name }}
         </h1>
-        <div v-if="!pending">
+        <div>
           Страница находится в разработке. Спасибо за понимание!
         </div>
       </div>
-      <!-- <div class="mt-5">
-        <ProfileSettings />
-      </div> -->
     </NuxtLayout>
   </div>
 </template>
 <script setup lang="ts">
-const { currentUser } = storeToRefs(useAuthStore());
+const { currentUser } = useAuth();
 </script>

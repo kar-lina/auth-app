@@ -12,7 +12,7 @@ export declare class AuthService {
     signUp(signUpDto: SignUpDto): Promise<{
         token: string;
     }>;
-    checkPassword(password: string, userPassword: string): Promise<any>;
+    isPasswordMatch(password: string, userPassword: string): Promise<any>;
     login(loginDto: LoginDto): Promise<{
         token: string;
         data: Partial<User>;

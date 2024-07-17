@@ -3,17 +3,33 @@
 module.exports = {
   root: true,
   parser: 'vue-eslint-parser',
-  parserOptions: {
-    parser: {
-      ts: '@typescript-eslint/parser',
-    },
-  },
+  // parserOptions: {
+  //   parser: {
+  //     ts: '@typescript-eslint/parser',
+  //   },
+  // },
   env: {
     node: true,
     browser: true,
   },
-  extends: ['plugin:vue/vue3-recommended'],
-  rules: {
+  parserOptions: {
+    parser: "@typescript-eslint/parser",
+    ecmaVersion: 2020,
+    sourceType: "module",
+  },
+  extends: [
+    "plugin:@typescript-eslint/recommended",
+    "eslint:recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended",
+    "plugin:vue/vue3-recommended",
+    //"plugin:vue/recommended",
+    "prettier/vue",
+  ],
+  plugins: ["prettier", "@typescript-eslint"],
+  rules: { 
+    "no-unused-vars": "error",
+    "@typescript-eslint/no-unused-vars-experimental": "error",
     'no-trailing-spaces': ['warn'],
     'prefer-promise-reject-errors': 'off',
     'vue/no-v-html': 'off',

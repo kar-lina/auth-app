@@ -49,11 +49,8 @@ export class AuthService {
     return { token };
   }
 
-  async checkPassword(password: string, userPassword: string) {
-    const isPasswordMatch = await bcrypt.compare(password, userPassword);
-    // if (!isPasswordMatch)
-      // throw new UnauthorizedException('Invalid email or password!');
-    return isPasswordMatch;
+  async isPasswordMatch(password: string, userPassword: string) {
+    return await bcrypt.compare(password, userPassword);
   }
 
   async login(
@@ -66,7 +63,8 @@ export class AuthService {
     });
     if (!user) throw new UnauthorizedException('Invalid email or password!');
 
-    this.checkPassword(password, user.password);
+    if (!this.isPasswordMatch(password, user.password))
+      throw new UnauthorizedException('Invalid email or password!');
 
     const isTwoFactorAuthenticationEnabled =
       user.isTwoFactorAuthenticationEnabled;

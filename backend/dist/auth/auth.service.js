@@ -43,9 +43,8 @@ let AuthService = class AuthService {
         const token = this.jwtService.sign({ id: newUser.id });
         return { token };
     }
-    async checkPassword(password, userPassword) {
-        const isPasswordMatch = await bcrypt.compare(password, userPassword);
-        return isPasswordMatch;
+    async isPasswordMatch(password, userPassword) {
+        return await bcrypt.compare(password, userPassword);
     }
     async login(loginDto) {
         const { email, password, twoFactorAuthenticationCode } = loginDto;
@@ -54,7 +53,8 @@ let AuthService = class AuthService {
         });
         if (!user)
             throw new common_1.UnauthorizedException('Invalid email or password!');
-        this.checkPassword(password, user.password);
+        if (!this.isPasswordMatch(password, user.password))
+            throw new common_1.UnauthorizedException('Invalid email or password!');
         const isTwoFactorAuthenticationEnabled = user.isTwoFactorAuthenticationEnabled;
         const { name, twoFactorAuthenticationSecretEnabledAt, id } = user;
         if (isTwoFactorAuthenticationEnabled) {

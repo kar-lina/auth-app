@@ -1,13 +1,8 @@
-import type { AsyncData } from '#app';
-import { defineStore } from 'pinia';
-import { useToastStore } from '~/stores/toast';
-import type {
-  LoginUserPayloadInterface,
-  SignUpUserPayloadInterface,
-  User,
-} from '~/types';
+import { defineStore } from "pinia";
+import { useToastStore } from "~/stores/toast";
+import type { LoginUserPayloadInterface, SignUpUserPayloadInterface, User } from "~/types";
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore("auth", {
   state: () => ({
     authenticated: false,
     loading: false,
@@ -18,36 +13,25 @@ export const useAuthStore = defineStore('auth', {
     async getAuth() {
       const { alert } = useToastStore();
 
-      const userId = useCookie('userId');
+      const userId = useCookie("userId");
       if (!userId?.value) {
         this.logUserOut();
         return;
       }
-      const { data, pending }: any = await useBaseFetch(
-        `/users/${userId.value}`,
-        {
-          onResponseError({ request, response, options }) {
-            alert(response._data.message, 'error');
-          },
-        },
-      );
-      this.currentUser = data.value;
-      userId.value = data.value.id;
+      const { data }: any = await useBaseFetch(`/users/${userId.value}`);
+      if (data?.value) {
+        this.currentUser = data?.value;
+        userId.value = data.value.id;
+      }
     },
-    async authenticateUser({
-      email,
-      password,
-      twoFactorAuthenticationCode,
-    }: LoginUserPayloadInterface) {
+    async authenticateUser({ email, password, twoFactorAuthenticationCode }: LoginUserPayloadInterface) {
       const { alert } = useToastStore();
-      const showOtp = ref(false)
-
-      const { data, status } = await useBaseFetch<{
+      const { data, error } = await useBaseFetch<{
         token: string;
         data: User;
-      }>('/auth/login', {
-        method: 'post',
-        headers: { 'Content-Type': 'application/json' },
+      }>("/auth/login", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
         body: twoFactorAuthenticationCode
           ? {
               email,
@@ -55,62 +39,43 @@ export const useAuthStore = defineStore('auth', {
               twoFactorAuthenticationCode,
             }
           : { email, password },
-        onResponseError({ request, response, options }) {
-          useNuxtApp().$toast.error(response._data.message);
-          if (response.status === 403) {
-            showOtp.value = true
-          }
-        },
       });
-      this.loading = status.value === 'pending';
       if (data.value && data?.value?.token) {
-        const token = useCookie('token'); // useCookie new hook in nuxt 3
-        const userId = useCookie('userId');
+        const token = useCookie("token"); // useCookie new hook in nuxt 3
+        const userId = useCookie("userId");
         token.value = data?.value?.token; // set token to cookie
         userId.value = `${data.value.data.id}`;
         this.authenticated = true; // set authenticated  state value to true
-        alert('С возвращением!');
+        alert("С возвращением!");
       }
-      return showOtp;
+      return {data, error}
     },
     async signUpUser({ email, password, name }: SignUpUserPayloadInterface) {
       const { alert } = useToastStore();
 
-      const { data, status } = await useBaseFetch<{
+      const { data,error } = await useBaseFetch<{
         token: string;
         data: User;
-      }>('/auth/signup', {
-        method: 'post',
-        headers: { 'Content-Type': 'application/json' },
+      }>("/auth/signup", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
         body: {
           email,
           password,
           name,
-        },
-        onResponseError({ request, response, options }) {
-          useNuxtApp().$toast.error(response._data.message);
-        },
+        }
       });
-      this.loading = status.value === 'pending';
       if (data.value) {
-        // const token = useCookie('token'); // useCookie new hook in nuxt 3
-        // token.value = data?.value?.token; // set token to cookie
-        // const userId = useCookie('userId');
-        // userId.value = `${data.value.user.id}`;
-        // this.authenticated = true; // set authenticated  state value to true
-        alert('Поздравляем! Регистрация прошла успешно.');
+        alert("Поздравляем! Регистрация прошла успешно.");
       }
     },
     logUserOut() {
-      const { alert } = useToastStore();
-      console.log('logUserOut');
-      const token = useCookie('token'); // useCookie new hook in nuxt 3
-      const userId = useCookie('userId');
+      const token = useCookie("token"); // useCookie new hook in nuxt 3
+      const userId = useCookie("userId");
       useClearStore();
       userId.value = null;
       this.authenticated = false; // set authenticated  state value to false
       token.value = null; // clear the token cookie
-      alert('До скорой встречи!', 'info');
     },
   },
 });

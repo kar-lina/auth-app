@@ -124,9 +124,6 @@ const enable2fa = async () => {
       '/2fa/turn-on',
       {
         method: 'post',
-        onResponseError({ request, response, options }) {
-          alert(response._data.message, 'error');
-        },
       },
     );
     if (res.otpauthUrl) {
@@ -151,16 +148,13 @@ const disble2fa = async () => {
         body: {
           twoFactorAuthenticationCode: twoFactorAuthenticationCode.value,
         },
-        onResponseError({ request, response, options }) {
-          alert(response._data.message, 'error');
-        },
       },
     );
     getAuth();
     alert('Двухфакторная аутентификация отключена', 'info');
     disable2FAModalOpen.value = false
   } catch (error: any) {
-    console.log(error);
+    // console.log(error);
   }
 };
 </script>

@@ -2,15 +2,15 @@
   <div ref="otpCont">
     <input
       v-for="(el, ind) in digits"
-      :key="el? el + ind : ind"
+      :key="el ? el + ind : ind"
       v-model="digits[ind]"
       type="text"
-      :class="['digit-box', small? '_small': '']"
+      :class="['digit-box', small ? '_small' : '']"
       :autofocus="ind === 0"
       :placeholder="String(ind + 1)"
       maxlength="1"
       @keydown="handleKeyDown($event, ind)"
-    >
+    />
   </div>
 </template>
 <script lang="ts" setup>
@@ -36,10 +36,9 @@ for (let i = 0; i < props.digitCount; i++) {
 // } else {
 
 // }
-
 const otpCont = ref<HTMLDivElement | null>(null);
 // const otpContChildren = ref< HTMLInputElement[]>(otpCont.value?.children);
-const emit = defineEmits(['update:otp']);
+const emit = defineEmits(["update:otp"]);
 
 const isDigitsFull = function () {
   for (const elem of digits) {
@@ -51,15 +50,11 @@ const isDigitsFull = function () {
   return true;
 };
 const handleKeyDown = function (event: KeyboardEvent, index: number) {
-  if (
-    event.key !== 'Tab' &&
-    event.key !== 'ArrowRight' &&
-    event.key !== 'ArrowLeft'
-  ) {
+  if (event.key !== "Tab" && event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
     event.preventDefault();
   }
 
-  if (event.key === 'Backspace') {
+  if (event.key === "Backspace") {
     digits[index] = null;
 
     if (index != 0) {
@@ -69,7 +64,7 @@ const handleKeyDown = function (event: KeyboardEvent, index: number) {
     return;
   }
 
-  if (new RegExp('^([0-9])$').test(event.key)) {
+  if (new RegExp("^([0-9])$").test(event.key)) {
     digits[index] = event.key;
 
     if (index != props.digitCount - 1) {
@@ -77,7 +72,7 @@ const handleKeyDown = function (event: KeyboardEvent, index: number) {
     }
   }
   if (isDigitsFull()) {
-    emit('update:otp', digits.join(''));
+    emit("update:otp", digits.join(""));
   }
 };
 </script>
