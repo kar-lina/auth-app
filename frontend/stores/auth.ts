@@ -48,12 +48,12 @@ export const useAuthStore = defineStore("auth", {
         this.authenticated = true; // set authenticated  state value to true
         alert("С возвращением!");
       }
-      return {data, error}
+      return { data, error };
     },
     async signUpUser({ email, password, name }: SignUpUserPayloadInterface) {
       const { alert } = useToastStore();
 
-      const { data,error } = await useBaseFetch<{
+      const { data, error } = await useBaseFetch<{
         token: string;
         data: User;
       }>("/auth/signup", {
@@ -63,7 +63,7 @@ export const useAuthStore = defineStore("auth", {
           email,
           password,
           name,
-        }
+        },
       });
       if (data.value) {
         alert("Поздравляем! Регистрация прошла успешно.");

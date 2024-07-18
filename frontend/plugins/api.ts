@@ -1,6 +1,6 @@
 export default defineNuxtPlugin((nuxtApp) => {
   const userId = useCookie("userId");
-  const {alert} = useToastStore()
+  const { alert } = useToastStore();
   const config = useRuntimeConfig();
   const api = $fetch.create({
     baseURL: config.public.apiBase as string,
@@ -19,7 +19,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     async onResponseError({ response }) {
       const token = useCookie("token");
-      alert(response._data.message)
+      alert(response._data.message);
       if (response.status === 401) {
         userId.value = null;
         token.value = null;

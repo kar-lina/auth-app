@@ -56,5 +56,4 @@
 </template>
 <script lang="ts" setup>
 const { logUserOut, authenticated } = useAuth();
-
 </script>

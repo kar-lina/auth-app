@@ -1,8 +1,8 @@
-import { defineStore } from 'pinia'
-import { useToastStore } from '~/stores/toast'
-import type { LoginUserPayloadInterface, SignUpUserPayloadInterface, User } from '~/types'
+import { defineStore } from "pinia";
+import { useToastStore } from "~/stores/toast";
+import type { LoginUserPayloadInterface, SignUpUserPayloadInterface, User } from "~/types";
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore("auth", {
   state: () => ({
     currentUser: null as User | null,
   }),
@@ -10,13 +10,10 @@ export const useAuthStore = defineStore('auth', {
     async getUser(id: number) {
       // const { alert } = useToastStore()
 
-      const { data, pending }: any = await useBaseFetch(
-        '/auth/login'
-      )
+      const { data, pending }: any = await useBaseFetch("/auth/login");
       if (data.value && data?.value?.token) {
-        this.currentUser = data?.value?.data
+        this.currentUser = data?.value?.data;
       }
     },
-
   },
-})
+});

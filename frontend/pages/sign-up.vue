@@ -73,7 +73,6 @@ import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { z } from 'zod';
 const { signUpUser } = useAuth();
-
 const router = useRouter();
 
 const schema = toTypedSchema(

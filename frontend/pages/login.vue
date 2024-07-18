@@ -36,7 +36,7 @@ const router = useRouter();
 const { authenticateUser } = useAuth();
 
 const showOtp = ref(false);
-const twoFactorAuthenticationCode = ref('');
+const twoFactorAuthenticationCode = ref("");
 
 const schema = toTypedSchema(
   z.object({
@@ -50,12 +50,12 @@ const { errors, handleSubmit, defineField } = useForm({
 });
 
 const onSubmit = handleSubmit(async (values) => {
-   const {data, error} = await authenticateUser(
-      showOtp ? { ...values, twoFactorAuthenticationCode: twoFactorAuthenticationCode.value } : values,
-    );
-    twoFactorAuthenticationCode.value = ''
-    showOtp.value = error.value?.statusCode === 403
-    if(!error.value && data.value) router.push("/profile");
+  const { data, error } = await authenticateUser(
+    showOtp ? { ...values, twoFactorAuthenticationCode: twoFactorAuthenticationCode.value } : values,
+  );
+  twoFactorAuthenticationCode.value = "";
+  showOtp.value = error.value?.statusCode === 403;
+  if (!error.value && data.value) router.push("/profile");
 });
 
 const [email, emailAttrs] = defineField("email");

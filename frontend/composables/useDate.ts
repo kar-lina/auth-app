@@ -1,3 +1,3 @@
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
-export const useDate = (date: Date, format='DD.MM.YYYY') => dayjs(date).format(format);
+export const useDate = (date: Date, format = "DD.MM.YYYY") => dayjs(date).format(format);
