@@ -50,7 +50,7 @@
           <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
         </nuxt-link>
       </div>
-      <IconsLogo v-else />
+      <IconsLogo class="w-7 h-7 md:w-auto md:h-auto " v-else />
     </div>
   </header>
 </template>

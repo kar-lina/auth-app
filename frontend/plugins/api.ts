@@ -19,7 +19,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     async onResponseError({ response }) {
       const token = useCookie("token");
-      alert(response._data.message);
+      alert(response._data.message, 'error');
       if (response.status === 401) {
         userId.value = null;
         token.value = null;

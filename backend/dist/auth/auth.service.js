@@ -64,7 +64,7 @@ let AuthService = class AuthService {
             else {
                 const isCodeValid = this.twofaService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, user);
                 if (!isCodeValid) {
-                    throw new common_1.UnauthorizedException('Wrong authentication code');
+                    throw new common_1.HttpException('Wrong authentication code', common_1.HttpStatus.FORBIDDEN);
                 }
             }
         }

@@ -83,11 +83,13 @@ export class AuthService {
             user,
           );
         if (!isCodeValid) {
-          throw new UnauthorizedException('Wrong authentication code');
+          throw new HttpException(
+            'Wrong authentication code',
+            HttpStatus.FORBIDDEN,
+          );
         }
       }
     }
-
     const token = this.jwtService.sign({ id: user.id });
     return {
       token,

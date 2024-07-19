@@ -13,3 +13,4 @@ export default withNuxt({
     ...eslintPluginPrettierRecommended.rules,
   },
 });
+
