@@ -1,20 +1,20 @@
 <template>
   <div>
     <NuxtLayout name="auth">
-      <div class="p-10 text-center rounded-xl bg-white">
+      <div class="p-5 md:p-10 text-center rounded-xl bg-white">
         <h1 class="text-xl md:text-2xl  mb-5 md:mb-10">Добро пожаловать в AuthApp!</h1>
         <form class="flex flex-col  gap-4 md:gap-8" @submit="onSubmit">
           <div>
             <label class="input input-bordered flex items-center gap-2 mb-1">
               <IconsEmail class="h-4 w-4" />
-              <input v-model="email" v-bind="emailAttrs" type="email" class="grow" placeholder="Email" />
+              <input tabindex="1" v-model="email" v-bind="emailAttrs" type="email" class="grow" placeholder="Email" autofocus="off"/>
             </label>
             <div class="text-xs text-error text-left pl-4">{{ errors.email }}</div>
           </div>
           <div>
             <label class="input input-bordered flex items-center gap-2 mb-1">
               <IconsPassword />
-              <input v-model="password" v-bind="passwordAttrs" type="password" class="grow" placeholder="Password" />
+              <input  tabindex="2" v-model="password" v-bind="passwordAttrs" type="password" class="grow" placeholder="Password" />
             </label>
             <div class="text-xs text-error text-left pl-4">
               {{ errors.password }}
@@ -24,7 +24,7 @@
             <p class="mb-2">Введите код из приложения для аутентификации:</p>
             <UiOTP :digit-count="6" small @update:otp="twoFactorAuthenticationCode = $event" />
           </label>
-          <input :disabled="!twoFactorAuthenticationCode && showOtp" type="submit" value="Войти" class="btn" />
+          <input  :disabled="!twoFactorAuthenticationCode && showOtp" type="submit" value="Войти" class="btn" />
         </form>
         <p class="mt-5 md:text-base">
           Нет аккаунта?

@@ -63,7 +63,7 @@ export class AuthService {
     });
     if (!user) throw new UnauthorizedException('Invalid email or password!');
 
-    if (!this.isPasswordMatch(password, user.password))
+    if (!(await this.isPasswordMatch(password, user.password)))
       throw new UnauthorizedException('Invalid email or password!');
 
     const isTwoFactorAuthenticationEnabled =

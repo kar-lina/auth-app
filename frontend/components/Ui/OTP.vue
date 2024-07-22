@@ -4,7 +4,7 @@
       v-for="(el, ind) in digits"
       :key="el ? el + ind : ind"
       v-model="digits[ind]"
-      type="text"
+      type="srting"
       :class="['digit-box', small ? '_small' : '']"
       :autofocus="ind === 0"
       :placeholder="String(ind + 1)"
@@ -37,7 +37,6 @@ for (let i = 0; i < props.digitCount; i++) {
 
 // }
 const otpCont = ref<HTMLDivElement | null>(null);
-// const otpContChildren = ref< HTMLInputElement[]>(otpCont.value?.children);
 const emit = defineEmits(["update:otp"]);
 
 const isDigitsFull = function () {
@@ -58,7 +57,8 @@ const handleKeyDown = function (event: KeyboardEvent, index: number) {
     digits[index] = null;
 
     if (index != 0) {
-      otpCont?.value?.children[index - 1].focus() as HTMLInputElement;
+      const prevElement = otpCont?.value?.children[index - 1] as HTMLInputElement;
+      if (prevElement) prevElement.focus();
     }
 
     return;
@@ -66,9 +66,15 @@ const handleKeyDown = function (event: KeyboardEvent, index: number) {
 
   if (new RegExp("^([0-9])$").test(event.key)) {
     digits[index] = event.key;
+    console.log(otpCont?.value?.children[index + 1]);
 
     if (index != props.digitCount - 1) {
-      otpCont?.value?.children[index + 1].focus();
+      const nextElement = otpCont?.value?.children[index + 1] as HTMLInputElement;
+      if (nextElement) {
+        // nextElement.setAttribute('value','My default value') ;
+        nextElement.focus();
+        // nextElement.value="";
+      }
     }
   }
   if (isDigitsFull()) {

@@ -53,7 +53,7 @@ let AuthService = class AuthService {
         });
         if (!user)
             throw new common_1.UnauthorizedException('Invalid email or password!');
-        if (!this.isPasswordMatch(password, user.password))
+        if (!(await this.isPasswordMatch(password, user.password)))
             throw new common_1.UnauthorizedException('Invalid email or password!');
         const isTwoFactorAuthenticationEnabled = user.isTwoFactorAuthenticationEnabled;
         const { name, twoFactorAuthenticationSecretEnabledAt, id } = user;
