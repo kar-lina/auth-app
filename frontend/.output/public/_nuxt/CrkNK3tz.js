@@ -1,0 +1,1 @@
+import{_ as l,o as a,c,a as e,A as t}from"./BTuofGIq.js";const i={},o={class:"context"},n=e("div",{class:"area"},[e("ul",{class:"circles"},[e("li"),e("li"),e("li"),e("li"),e("li"),e("li"),e("li"),e("li"),e("li"),e("li")])],-1);function r(s,d){return a(),c("div",null,[e("div",o,[t(s.$slots,"default")]),n])}const f=l(i,[["render",r]]);export{f as default};

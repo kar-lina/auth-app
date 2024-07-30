@@ -1,0 +1,1 @@
+import{_ as s}from"./D9neHLkh.js";import{_ as a,o as n,D as c,w as r,a as t,A as _}from"./BTuofGIq.js";const l={},u={class:"mt-30 mx-auto p-10 flex flex-col items-center gap-10 justify-center"};function f(e,d){const o=s;return n(),c(o,null,{default:r(()=>[t("div",null,[t("div",u,[_(e.$slots,"default")])])]),_:3})}const p=a(l,[["render",f]]);export{p as default};
